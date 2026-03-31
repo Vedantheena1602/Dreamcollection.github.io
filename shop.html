@@ -12,11 +12,48 @@
             padding: 40px 20px;
         }
 
+        .category-tabs {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 3rem;
+        }
+
+        .category-btn {
+            padding: 12px 30px;
+            background-color: #f0f0f0;
+            border: 2px solid #e0e0e0;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: var(--transition);
+            color: var(--dark-color);
+        }
+
+        .category-btn:hover {
+            background-color: #e0e0e0;
+            border-color: var(--primary-color);
+        }
+
+        .category-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
         .products-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 2rem;
             margin-top: 3rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .product-card {
@@ -202,6 +239,17 @@
         .close-modal-btn:hover {
             background-color: var(--secondary-color);
         }
+
+        @media (max-width: 768px) {
+            .category-tabs {
+                gap: 0.5rem;
+            }
+
+            .category-btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -240,8 +288,17 @@
             <button class="checkout-btn" id="checkoutBtn" onclick="checkout()" disabled>Checkout</button>
         </div>
 
+        <!-- Category Tabs -->
+        <div class="category-tabs">
+            <button class="category-btn active" onclick="filterCategory('all')">All Products</button>
+            <button class="category-btn" onclick="filterCategory('rings')">Rings</button>
+            <button class="category-btn" onclick="filterCategory('necklaces')">Necklaces</button>
+            <button class="category-btn" onclick="filterCategory('earrings')">Earrings</button>
+            <button class="category-btn" onclick="filterCategory('bracelets')">Bracelets</button>
+        </div>
+
         <!-- Products Grid -->
-        <h2 style="text-align: center; color: var(--dark-color); margin-bottom: 2rem;">Our Collection</h2>
+        <h2 style="text-align: center; color: var(--dark-color); margin-bottom: 2rem;" id="categoryTitle">All Products</h2>
         <div class="products-grid" id="productsGrid"></div>
     </section>
 
@@ -266,78 +323,97 @@
     </footer>
 
     <script>
-        // Products Data
+        // Products Data with Categories
         const products = [
+            // Rings
             {
                 id: 1,
                 name: "Diamond Ring",
                 price: 45000,
                 description: "Elegant diamond ring with gold setting",
-                emoji: "💍"
-            },
-            {
-                id: 2,
-                name: "Pearl Necklace",
-                price: 35000,
-                description: "Beautiful pearl necklace perfect for any occasion",
-                emoji: "📿"
-            },
-            {
-                id: 3,
-                name: "Gold Earrings",
-                price: 28000,
-                description: "Classic gold earrings with elegant design",
-                emoji: "✨"
-            },
-            {
-                id: 4,
-                name: "Sapphire Pendant",
-                price: 52000,
-                description: "Stunning sapphire pendant with diamond accents",
-                emoji: "💎"
-            },
-            {
-                id: 5,
-                name: "Gold Bracelet",
-                price: 38000,
-                description: "Luxurious gold bracelet with intricate design",
-                emoji: "⌚"
+                emoji: "💍",
+                category: "rings"
             },
             {
                 id: 6,
                 name: "Ruby Ring",
                 price: 55000,
                 description: "Exquisite ruby ring with elegant setting",
-                emoji: "💍"
+                emoji: "💍",
+                category: "rings"
+            },
+            // Necklaces
+            {
+                id: 2,
+                name: "Pearl Necklace",
+                price: 35000,
+                description: "Beautiful pearl necklace perfect for any occasion",
+                emoji: "📿",
+                category: "necklaces"
+            },
+            {
+                id: 4,
+                name: "Sapphire Pendant",
+                price: 52000,
+                description: "Stunning sapphire pendant with diamond accents",
+                emoji: "💎",
+                category: "necklaces"
+            },
+            // Earrings
+            {
+                id: 3,
+                name: "Gold Earrings",
+                price: 28000,
+                description: "Classic gold earrings with elegant design",
+                emoji: "✨",
+                category: "earrings"
+            },
+            // Bracelets
+            {
+                id: 5,
+                name: "Gold Bracelet",
+                price: 38000,
+                description: "Luxurious gold bracelet with intricate design",
+                emoji: "⌚",
+                category: "bracelets"
             },
             {
                 id: 7,
                 name: "Emerald Set",
                 price: 65000,
                 description: "Complete emerald jewelry set - necklace & earrings",
-                emoji: "🌟"
+                emoji: "🌟",
+                category: "bracelets"
             },
             {
                 id: 8,
                 name: "Diamond Bracelet",
                 price: 72000,
                 description: "Premium diamond bracelet for special moments",
-                emoji: "✨"
+                emoji: "✨",
+                category: "bracelets"
             }
         ];
 
         let cart = [];
+        let currentCategory = 'all';
 
         // Initialize shop
         function initializeShop() {
-            displayProducts();
+            displayProducts('all');
             loadCart();
         }
 
-        // Display products
-        function displayProducts() {
+        // Display products by category
+        function displayProducts(category) {
             const productsGrid = document.getElementById('productsGrid');
-            productsGrid.innerHTML = products.map(product => `
+            let filteredProducts = products;
+
+            if (category !== 'all') {
+                filteredProducts = products.filter(p => p.category === category);
+            }
+
+            productsGrid.innerHTML = filteredProducts.map(product => `
                 <div class="product-card">
                     <div class="product-image">${product.emoji}</div>
                     <div class="product-info">
@@ -351,6 +427,30 @@
                     </div>
                 </div>
             `).join('');
+        }
+
+        // Filter category
+        function filterCategory(category) {
+            currentCategory = category;
+            
+            // Update active button
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Update title
+            const titles = {
+                'all': 'All Products',
+                'rings': 'Rings',
+                'necklaces': 'Necklaces',
+                'earrings': 'Earrings',
+                'bracelets': 'Bracelets'
+            };
+            document.getElementById('categoryTitle').textContent = titles[category];
+
+            // Display products
+            displayProducts(category);
         }
 
         // Add to cart
