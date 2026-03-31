@@ -21,7 +21,7 @@ A beautiful, modern website celebrating dreams, aspirations, and the journey to 
 
 ## 🖼️ Images
 
-- **Logo**: Place your logo image as `images/logo.png` (recommended size: 200x200px)
+- **Logo**: Place your logo image as `images/logo.jpg.jpeg` (recommended size: 200x200px)
 - The logo will automatically appear on the homepage hero section
 
 ## 🎨 Design Highlights
