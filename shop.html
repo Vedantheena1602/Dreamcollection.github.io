@@ -78,6 +78,13 @@
             justify-content: center;
             font-size: 4rem;
             overflow: hidden;
+            position: relative;
+        }
+
+        .product-image img {
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
         }
 
         .product-info {
@@ -365,6 +372,7 @@
                 price: 250,
                 description: "Elegant gold butterfly pendant necklace - a timeless piece",
                 emoji: "🦋",
+                image: "images/butterfly-necklace.jpg",
                 category: "necklaces"
             },
             // Earrings
@@ -423,7 +431,9 @@
 
             productsGrid.innerHTML = filteredProducts.map(product => `
                 <div class="product-card">
-                    <div class="product-image">${product.emoji}</div>
+                    <div class="product-image">
+                        ${product.image ? `<img src="${product.image}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover;">` : product.emoji}
+                    </div>
                     <div class="product-info">
                         <h3>${product.name}</h3>
                         <p class="product-description">${product.description}</p>
