@@ -6,7 +6,7 @@
 }
 
 :root {
-    --primary-color: #6366f1;
+    --primary-color: #000000;
     --secondary-color: #000000;
     --dark-color: #1f2937;
     --light-color: #f9fafb;
@@ -47,7 +47,7 @@ body {
 .logo {
     font-size: 1.8rem;
     font-weight: bold;
-    color: red;
+    color: #FFD700;
     background-color: white;
     padding: 8px 16px;
     border-radius: 8px;
